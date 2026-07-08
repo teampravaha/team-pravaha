@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team Pravaha | Amrita Shell Eco-marathon</title>
+
+    <!-- Frameworks & Fonts -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-blue: #008080;
+            --f1-dark: #0a0a0a;
+            --f1-card: #141414;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--f1-dark);
+            color: #ffffff;
+        }
+
+        .font-heading { font-family: 'Orbitron', sans-serif; }
+
+        /* ---------- Persistent background across the whole site ---------- */
+        .site-bg {
+            position: fixed;
+            inset: 0;
+            z-index: -2;
+            width: 100%;
+            height: 100%;
+        }
+        .site-bg img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .site-bg::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(5,5,5,0.4);
+        }
+
+        .hero-overlay {
+            background: linear-gradient(180deg, rgba(10, 10, 10, 0.05) 0%, rgba(10, 10, 10, 0.15) 55%, rgba(10, 10, 10, 0.4) 100%);
+        }
+
+        /* Text readability against the visible background photo */
+        h1, h2, h3, h4, p, span, li, a { text-shadow: 0 2px 12px rgba(0,0,0,0.6); }
+
+        .glass-nav {
+            background: rgba(8, 8, 8, 0.75);
+            backdrop-filter: blur(14px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .nav-link {
+            position: relative;
+            transition: 0.3s ease;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 0;
+            background: linear-gradient(90deg, var(--primary-blue), #14b8b8);
+            transition: width 0.35s cubic-bezier(0.65,0,0.35,1);
+        }
+
+        .nav-link:hover::after,
+        .nav-link.active::after { width: 100%; }
+
+        /* ---------- Section glass panels (so the background photo peeks through) --------- */
+        .section-panel {
+            background: rgba(6, 6, 6, 0.35);
+            backdrop-filter: blur(3px);
+        }
+
+        .spec-card, .crew-card, .info-card {
+            background: rgba(20, 20, 20, 0.75);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-left: 4px solid transparent;
+            backdrop-filter: blur(8px);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .info-card {
+            overflow: visible;
+        }
+
+        .spec-card::before, .crew-card::before, .info-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(120deg, transparent, rgba(0,128,128,0.12), transparent);
+            transition: left 0.8s ease;
+        }
+
+        .spec-card:hover::before, .crew-card:hover::before, .info-card:hover::before { left: 100%; }
+
+        .spec-card:hover {
+            border-left-color: var(--primary-blue);
+            transform: translateX(10px);
+            background: rgba(26, 26, 26, 0.88);
+            box-shadow: -8px 8px 30px rgba(0,128,128,0.15);
+        }
+
+        .crew-card:hover, .info-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(0,128,128,0.5);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5), 0 0 30px rgba(0,128,128,0.12);
+        }
+
+        .sponsor-card {
+            background: rgba(20, 20, 20, 0.75);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 12px;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            backdrop-filter: blur(8px);
+        }
+
+        .sponsor-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            border-color: rgba(0,128,128,0.5);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5), 0 0 30px rgba(0,128,128,0.2);
+        }
+
+        .sponsor-logo-badge {
+            background: #ffffff;
+            border-radius: 10px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 14px 28px;
+        }
+
+        .gallery-item { overflow: hidden; border-radius: 8px; }
+        .gallery-item img { transition: transform 0.6s ease; }
+        .gallery-item:hover img { transform: scale(1.12) rotate(0.5deg); }
+
+        /* ---------- Highlight callout box ---------- */
+        .highlight-box {
+            position: relative;
+            background: linear-gradient(135deg, rgba(0,128,128,0.15), rgba(0,128,128,0.02));
+            border: 1px solid rgba(0,128,128,0.35);
+            border-radius: 14px;
+            overflow: hidden;
+        }
+        .highlight-box::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: conic-gradient(from 0deg, transparent, rgba(0,128,128,0.25), transparent 30%);
+            animation: rotateGlow 6s linear infinite;
+        }
+        .highlight-box-inner {
+            position: relative;
+            background: rgba(8,8,8,0.85);
+            margin: 2px;
+            border-radius: 12px;
+        }
+        @keyframes rotateGlow {
+            to { transform: rotate(360deg); }
+        }
+
+        /* ---------- Divider ---------- */
+        .section-divider {
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-blue), transparent);
+            position: relative;
+        }
+        .section-divider::after {
+            content: '';
+            position: absolute;
+            left: 0; top: -3px;
+            width: 12px; height: 9px;
+            background: var(--primary-blue);
+            border-radius: 2px;
+        }
+
+        /* ---------- Role tag ---------- */
+        .role-lead {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 10px;
+            letter-spacing: 0.15em;
+            color: #14b8b8;
+            font-weight: 700;
+        }
+        .role-lead::before {
+            content: '';
+            width: 6px; height: 6px;
+            background: var(--primary-blue);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--primary-blue);
+        }
+
+        /* ---------- Fade-up utility (used alongside AOS for finer control) ---------- */
+        @keyframes floatUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .social-icon {
+            width: 46px; height: 46px;
+            display: flex; align-items: center; justify-content: center;
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 50%;
+            transition: all 0.35s ease;
+        }
+        .social-icon:hover {
+            background: var(--primary-blue);
+            border-color: var(--primary-blue);
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(0,128,128,0.4);
+        }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0a0a0a; }
+        ::-webkit-scrollbar-thumb { background: #2563eb; border-radius: 4px; }
+    </style>
+</head>
+<body class="overflow-x-hidden">
+
+    <!-- Persistent Background (visible behind every section) -->
+    <div class="site-bg">
+        <img src="shell_race_track_image.webp" alt="Shell Eco-marathon Track">
+    </div>
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 py-4 px-6 md:px-12 glass-nav">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <img src="pravaha-logo.png" alt="Team Pravaha" class="h-9 w-auto">
+                <span class="font-heading text-2xl font-black italic tracking-tighter text-white">TEAM <span class="text-[#008080]">PRAVAHA</span></span>
+            </div>
+
+            <!-- Desktop Links -->
+            <div class="hidden md:flex gap-8 text-[11px] font-bold uppercase tracking-[0.2em]">
+                <a href="#home" class="nav-link">Home</a>
+                <a href="#about" class="nav-link">About</a>
+                <a href="#crew" class="nav-link">Crew</a>
+                <a href="#event" class="nav-link">Event</a>
+                <a href="#sponsors" class="nav-link">Sponsors</a>
+                <a href="#contact" class="nav-link">Contact</a>
+            </div>
+
+            <button class="md:hidden text-white text-2xl" id="menuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header id="home" class="relative h-screen flex items-center justify-center overflow-hidden">
+        <div class="absolute inset-0 z-0 hero-overlay"></div>
+
+        <div class="relative z-10 text-center px-6" data-aos="fade-up" data-aos-duration="1400" data-aos-easing="ease-out-cubic">
+            <h2 class="text-white font-heading font-bold tracking-[0.4em] mb-6 uppercase text-sm md:text-base" data-aos="fade-down" data-aos-delay="200">
+    Amrita Vishwa Vidyapeetham
+</h2>
+
+<img src="pravaha-icon.png"
+     alt="Pravaha Emblem"
+     class="mx-auto w-64 md:w-[26rem] mb-4 drop-shadow-[0_12px_30px_rgba(0,0,0,0.7)]"
+     data-aos="zoom-in"
+     data-aos-delay="150"
+     data-aos-duration="1200">
+
+<h1 class="font-heading text-5xl md:text-8xl font-black italic tracking-tighter text-white leading-none mb-3"
+    style="text-shadow:0 4px 20px rgba(0,0,0,0.8);">
+    PRAVAHA
+</h1>
+            <p class="font-heading text-base md:text-2xl font-bold tracking-[0.15em] uppercase text-white" style="text-shadow: 0 2px 10px rgba(0,0,0,0.8);">Purpose <span class="text-[#14b8b8]">Powers</span> Every Mile</p>
+            <div class="flex flex-col md:flex-row justify-center gap-6 mt-10" data-aos="fade-up" data-aos-delay="450">
+                <a href="#about" class="px-10 py-4 bg-[#008080] hover:bg-[#006666] hover:scale-105 transition-all duration-300 font-bold uppercase tracking-widest text-sm italic">Explore Mission</a>
+                <a href="#event" class="px-10 py-4 border border-white hover:bg-white hover:text-black hover:scale-105 transition-all duration-300 font-bold uppercase tracking-widest text-sm italic">The Event</a>
+            </div>
+        </div>
+
+        <div class="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 animate-bounce text-gray-400 text-xl">
+            <i class="fas fa-chevron-down"></i>
+        </div>
+    </header>
+
+    <!-- About Section -->
+    <section id="about" class="py-24 px-6 md:px-12 section-panel">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16" data-aos="fade-up">
+                <p class="text-xs text-gray-500 uppercase tracking-[0.5em] mb-4 font-bold">Who We Are</p>
+                <h2 class="font-heading text-4xl md:text-6xl font-black italic uppercase tracking-tighter">About <span class="text-[#008080]">Team Pravaha</span></h2>
+                <div class="section-divider mx-auto mt-6"></div>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-16 items-start">
+                <div data-aos="fade-right" data-aos-duration="1000">
+                    <p class="text-gray-300 text-lg leading-relaxed mb-6">
+                        Team Pravaha is a student engineering team from Amrita Vishwa Vidyapeetham, Coimbatore, preparing to compete in the Shell Eco-marathon. Founded in October 2025, the team focuses on designing and building ultra-energy-efficient prototype vehicles while fostering innovation, collaboration, and sustainable engineering.
+                    </p>
+                    <p class="text-gray-400 text-base leading-relaxed mb-6">
+                        Our multidisciplinary team comprises 18 undergraduate students from various engineering disciplines, working collaboratively across specialised technical subsystems to achieve engineering excellence and develop an ultra-energy-efficient prototype vehicle.
+                    </p>
+                    <p class="text-gray-400 text-base leading-relaxed">
+                        United by a shared passion for innovation, Team Pravaha strives to advance sustainable mobility through practical engineering and continuous learning.
+                    </p>
+                </div>
+
+                <div class="space-y-8" data-aos="fade-left" data-aos-duration="1000">
+                    <!-- Highlight callout -->
+                    <div class="highlight-box p-[2px]">
+                        <div class="highlight-box-inner p-8">
+                            <i class="fas fa-flag-checkered text-[#008080] text-2xl mb-4"></i>
+                            <p class="text-white text-lg md:text-xl font-bold italic leading-relaxed">
+                                "Team Pravaha is set to become the first team from India to participate in the Shell Eco-marathon Asia-Pacific and Middle East region, Prototype Category using 100% Ethanol (E100) fuel."
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-4">
+                        <div class="info-card p-6 text-center" data-aos="zoom-in" data-aos-delay="100">
+                            <span class="text-[#008080] text-3xl font-bold font-heading">2025</span>
+                            <p class="text-[10px] uppercase tracking-widest text-gray-500 mt-2">Founded</p>
+                        </div>
+                        <div class="info-card p-6 text-center" data-aos="zoom-in" data-aos-delay="200">
+                            <span class="text-[#008080] text-3xl font-bold font-heading">18</span>
+                            <p class="text-[10px] uppercase tracking-widest text-gray-500 mt-2">Team Members</p>
+                        </div>
+                        <div class="info-card p-6 text-center" data-aos="zoom-in" data-aos-delay="300">
+                            <span class="text-[#008080] text-3xl font-bold font-heading">E100</span>
+                            <p class="text-[10px] uppercase tracking-widest text-gray-500 mt-2">Fuel Type</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Crew Section -->
+    <section id="crew" class="py-24 px-6 md:px-12 section-panel">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16" data-aos="fade-up">
+                <p class="text-xs text-gray-500 uppercase tracking-[0.5em] mb-4 font-bold">The People Behind the Prototype</p>
+                <h2 class="font-heading text-4xl md:text-6xl font-black italic uppercase tracking-tighter">Meet Our <span class="text-[#008080]">Crew</span></h2>
+                <div class="section-divider mx-auto mt-6"></div>
+            </div>
+
+            <!-- Leadership -->
+            <div class="grid md:grid-cols-2 gap-6 mb-10">
+                <div class="crew-card p-8 text-center" data-aos="fade-up">
+                    <p class="role-lead justify-center mb-3">TEAM CAPTAIN</p>
+                    <h3 class="font-heading text-2xl font-bold italic uppercase text-white">Dhivyaa Sakthi S S</h3>
+                </div>
+                <div class="crew-card p-8 text-center" data-aos="fade-up" data-aos-delay="100">
+                    <p class="role-lead justify-center mb-3">TEAM ADVISORS</p>
+                    <h3 class="font-heading text-xl font-bold italic uppercase text-white">Dr. Saravanan R <span class="text-[#008080] mx-2">|</span><br class="hidden sm:block"> Dr. Sampath Kumar</h3>
+                </div>
+            </div>
+
+            <!-- Divisions -->
+            <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="crew-card p-8" data-aos="fade-up" data-aos-delay="0">
+                    <div class="flex items-start gap-3 mb-5 min-h-[3.25rem]">
+                        <i class="fas fa-gears text-[#008080] mt-1"></i>
+                        <h4 class="font-heading text-lg font-bold uppercase italic">Powertrain</h4>
+                    </div>
+                    <ul class="space-y-3 text-sm text-gray-300">
+                        <li><span class="role-lead mr-2">Lead</span><br>Dhivyaa Sakthi S S</li>
+                        <li class="text-gray-400 pt-2 border-t border-white/5">Puvidhan MV</li>
+                        <li class="text-gray-400">Parvathy Vayalat</li>
+                        <li class="text-gray-400">Sanjay G</li>
+                        <li class="text-gray-400">Armaan Shameer</li>
+                    </ul>
+                </div>
+
+                <div class="crew-card p-8" data-aos="fade-up" data-aos-delay="100">
+                    <div class="flex items-start gap-3 mb-5 min-h-[3.25rem]">
+                        <i class="fas fa-car-side text-[#008080] mt-1"></i>
+                        <h4 class="font-heading text-lg font-bold uppercase italic">Chassis & Aerodynamics</h4>
+                    </div>
+                    <ul class="space-y-3 text-sm text-gray-300">
+                        <li><span class="role-lead mr-2">Lead</span><br>Niranjan Krishnan</li>
+                        <li class="text-gray-400 pt-2 border-t border-white/5">Jaya Shashank C</li>
+                        <li class="text-gray-400">Hrishi Krishnan H</li>
+                        <li class="text-gray-400">Saana Poovaiah N</li>
+                    </ul>
+                </div>
+
+                <div class="crew-card p-8" data-aos="fade-up" data-aos-delay="200">
+                    <div class="flex items-start gap-3 mb-5 min-h-[3.25rem]">
+                        <i class="fas fa-road text-[#008080] mt-1"></i>
+                        <h4 class="font-heading text-lg font-bold uppercase italic">Vehicle Dynamics</h4>
+                    </div>
+                    <ul class="space-y-3 text-sm text-gray-300">
+                        <li><span class="role-lead mr-2">Lead</span><br>Akshaya R</li>
+                        <li class="text-gray-400 pt-2 border-t border-white/5">Kishore DL</li>
+                        <li class="text-gray-400">Gangineti Sahasra</li>
+                        <li class="text-gray-400">Karthikeyan S</li>
+                    </ul>
+                </div>
+
+                <div class="crew-card p-8" data-aos="fade-up" data-aos-delay="300">
+                    <div class="flex items-start gap-3 mb-5 min-h-[3.25rem]">
+                        <i class="fas fa-bolt text-[#008080] mt-1"></i>
+                        <h4 class="font-heading text-lg font-bold uppercase italic">Electrical</h4>
+                    </div>
+                    <ul class="space-y-3 text-sm text-gray-300">
+                        <li><span class="role-lead mr-2">Lead</span><br>Namitha Madhu</li>
+                        <li class="text-gray-400 pt-2 border-t border-white/5">Srivarshan P</li>
+                        <li class="text-gray-400">Jyothika Sunil Balan</li>
+                        <li class="text-gray-400">Nethra G</li>
+                        <li class="text-gray-400">Suruthi N</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Event Section -->
+    <section id="event" class="py-24 px-6 md:px-12 section-panel relative overflow-hidden">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16" data-aos="fade-up">
+                <p class="text-xs text-gray-500 uppercase tracking-[0.5em] mb-4 font-bold">The Competition</p>
+                <h2 class="font-heading text-4xl md:text-6xl font-black italic uppercase tracking-tighter">Shell <span class="text-[#008080]">Eco-Marathon</span></h2>
+                <div class="section-divider mx-auto mt-6"></div>
+            </div>
+
+            <div class="grid lg:grid-cols-[1fr_1.3fr] gap-10 items-center">
+                <div data-aos="fade-right">
+                    <p class="text-gray-300 text-lg leading-relaxed">
+                        Shell Eco-marathon is a globally recognized student engineering competition that challenges teams to design, build, and operate ultra-energy-efficient vehicles. We aim to apply technical knowledge and enhance our engineering capabilities while representing Amrita Vishwa Vidyapeetham.
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-[1.2fr_1fr_1fr] gap-5 lg:pr-6" data-aos="fade-left">
+                    <div class="info-card p-6 text-center">
+                        <i class="fas fa-flask text-[#008080] text-2xl mb-4"></i>
+                        <p class="text-[10px] uppercase tracking-[0.3em] text-gray-500 mb-2">Category</p>
+                        <h3 class="font-heading text-xl font-bold uppercase">Prototype</h3>
+                    </div>
+                    <div class="info-card p-6 text-center">
+                        <i class="fas fa-gas-pump text-[#008080] text-2xl mb-4"></i>
+                        <p class="text-[10px] uppercase tracking-[0.3em] text-gray-500 mb-2">Fuel Type</p>
+                        <h3 class="font-heading text-xl font-bold uppercase">100% Ethanol (E100)</h3>
+                    </div>
+                    <div class="info-card p-6 text-center">
+                        <i class="fas fa-earth-asia text-[#008080] text-2xl mb-4"></i>
+                        <p class="text-[10px] uppercase tracking-[0.3em] text-gray-500 mb-2">Region</p>
+                        <h3 class="font-heading text-lg font-bold uppercase">Asia-Pacific & Middle East</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sponsors Section -->
+    <section id="sponsors" class="py-24 px-6 md:px-12 section-panel">
+        <div class="max-w-7xl mx-auto text-center">
+            <p class="text-xs text-gray-500 uppercase tracking-[0.5em] mb-4 font-bold" data-aos="fade-up">Backed By</p>
+            <h2 class="font-heading text-4xl md:text-6xl font-black italic uppercase tracking-tighter mb-6" data-aos="fade-up">Sponsors & <span class="text-[#008080]">Partners</span></h2>
+            <div class="section-divider mx-auto mb-20"></div>
+
+            <div class="grid md:grid-cols-2 gap-10 max-w-4xl mx-auto">
+                <div class="sponsor-card p-10" data-aos="fade-up" data-aos-delay="100">
+                    <p class="text-[10px] uppercase tracking-[0.4em] text-gray-500 font-bold mb-6">Platinum Sponsor</p>
+                    <div class="sponsor-logo-badge mb-6">
+                        <img src="gt-suite-logo.png" alt="GT-SUITE / Gamma Technologies" class="h-14 object-contain">
+                    </div>
+                    <h3 class="font-heading text-xl font-black italic uppercase text-white">GT-SUITE</h3>
+                    <p class="text-gray-400 text-sm uppercase tracking-widest mt-2">Simulation Software Excellence</p>
+                </div>
+
+                <div class="sponsor-card p-10" data-aos="fade-up" data-aos-delay="200">
+                    <p class="text-[10px] uppercase tracking-[0.4em] text-gray-500 font-bold mb-6">Bronze Sponsor</p>
+                    <div class="sponsor-logo-badge mb-6">
+                        <img src="solidworks-logo.png" alt="SOLIDWORKS" class="h-14 object-contain">
+                    </div>
+                    <h3 class="font-heading text-xl font-black italic uppercase text-white">SOLIDWORKS</h3>
+                    <p class="text-gray-400 text-sm uppercase tracking-widest mt-2">3D Design & Engineering</p>
+                </div>
+            </div>
+
+            <div class="mt-14" data-aos="fade-up">
+                <div class="inline-block info-card px-10 py-6">
+                    <p class="font-heading italic uppercase tracking-widest text-gray-300 text-sm">Partner with innovation. <span class="text-[#008080]">[Future Slots Open]</span></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-24 px-6 md:px-12 section-panel">
+        <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-20">
+            <div data-aos="fade-right">
+                <p class="text-xs text-gray-500 uppercase tracking-[0.5em] mb-4 font-bold">Reach Out</p>
+                <h2 class="font-heading text-4xl font-bold italic mb-6 uppercase tracking-tighter">Get in <span class="text-[#008080]">Touch</span></h2>
+                <p class="text-gray-400 mb-10 uppercase tracking-widest text-sm">Join us in our race towards a greener horizon.</p>
+
+                <div class="space-y-6">
+                    <div class="flex items-center gap-6">
+                        <div class="w-12 h-12 bg-[#111] rounded-full flex items-center justify-center text-[#008080] shrink-0"><i class="fas fa-user-tie"></i></div>
+                        <div>
+                            <p class="text-white font-bold uppercase tracking-widest text-sm">Team Captain</p>
+                            <p class="text-gray-400 text-sm">Dhivyaa Sakthi SS &nbsp;•&nbsp; +91 63819 14838</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-6">
+                        <div class="w-12 h-12 bg-[#111] rounded-full flex items-center justify-center text-[#008080] shrink-0"><i class="fas fa-chalkboard-user"></i></div>
+                        <div>
+                            <p class="text-white font-bold uppercase tracking-widest text-sm">Faculty Advisor</p>
+                            <p class="text-gray-400 text-sm">Dr. Saravanan R &nbsp;•&nbsp; +91 94423 30312</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-6">
+                        <div class="w-12 h-12 bg-[#111] rounded-full flex items-center justify-center text-[#008080] shrink-0"><i class="fas fa-map-marker-alt"></i></div>
+                        <span class="text-gray-300 text-sm uppercase tracking-widest leading-loose">Amrita Vishwa Vidyapeetham, Ettimadai, Coimbatore</span>
+                    </div>
+                </div>
+
+                <div class="flex gap-4 mt-12">
+                    <a href="https://www.instagram.com/teampravaha?igsh=ajYxajFiZmNhdGtw" target="_blank" rel="noopener noreferrer" class="social-icon text-lg"><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.linkedin.com/company/team-pravaha/" target="_blank" rel="noopener noreferrer" class="social-icon text-lg"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+
+            <div class="p-8 bg-[#0a0a0a]/80 border border-white/5 backdrop-blur" data-aos="fade-left">
+                <form id="contactForm" class="space-y-4" action="https://formspree.io/f/xrewvdwl" method="POST">
+                    <input type="text" name="name" placeholder="Full Name" required class="w-full bg-[#111] border border-white/10 p-4 rounded focus:outline-none focus:border-[#008080] text-sm transition">
+                    <input type="email" name="email" placeholder="Email Address" required class="w-full bg-[#111] border border-white/10 p-4 rounded focus:outline-none focus:border-[#008080] text-sm transition">
+                    <textarea name="message" placeholder="Your Message" rows="5" required class="w-full bg-[#111] border border-white/10 p-4 rounded focus:outline-none focus:border-[#008080] text-sm transition"></textarea>
+                    <button type="submit" id="contactSubmitBtn" class="w-full bg-[#008080] py-4 font-bold uppercase tracking-[0.2em] text-sm hover:bg-[#006666] hover:scale-[1.02] transition-all duration-300 italic">Send Message</button>
+                    <p id="contactFormStatus" class="text-sm text-center pt-2 hidden"></p>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-12 border-t border-white/5 section-panel">
+        <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center text-center">
+            <div class="mb-8 md:mb-0">
+                <span class="font-heading text-xl font-black italic tracking-tighter">TEAM <span class="text-[#008080]">PRAVAHA</span></span>
+                <p class="text-[10px] text-gray-600 uppercase tracking-widest mt-2">&copy; 2025 Team Pravaha. Built for Efficiency.</p>
+            </div>
+            <div class="flex gap-10 text-[10px] font-bold uppercase tracking-[0.3em] text-gray-500">
+                <a href="#home" class="hover:text-[#008080] transition">Home</a>
+                <a href="#about" class="hover:text-[#008080] transition">About</a>
+                <a href="#crew" class="hover:text-[#008080] transition">Crew</a>
+                <a href="#event" class="hover:text-[#008080] transition">Event</a>
+                <a href="#sponsors" class="hover:text-[#008080] transition">Sponsors</a>
+                <a href="#contact" class="hover:text-[#008080] transition">Contact</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 900,
+            once: true,
+            offset: 80,
+            easing: 'ease-out-cubic'
+        });
+
+        // Mobile Menu Logic
+        const menuBtn = document.getElementById('menuBtn');
+        const navLinks = document.querySelector('.hidden.md\\:flex');
+
+        menuBtn.addEventListener('click', () => {
+            navLinks.classList.toggle('hidden');
+            navLinks.classList.toggle('flex');
+            navLinks.classList.toggle('flex-col');
+            navLinks.classList.toggle('absolute');
+            navLinks.classList.toggle('top-16');
+            navLinks.classList.toggle('left-0');
+            navLinks.classList.toggle('w-full');
+            navLinks.classList.toggle('bg-black');
+            navLinks.classList.toggle('p-6');
+            navLinks.classList.toggle('gap-6');
+        });
+
+        // Close mobile menu after clicking a link
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth < 768 && !navLinks.classList.contains('hidden')) {
+                    menuBtn.click();
+                }
+            });
+        });
+
+        // Active nav link highlight on scroll
+        const sections = document.querySelectorAll('section, header');
+        const navItems = document.querySelectorAll('.nav-link');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(sec => {
+                const sectionTop = sec.offsetTop - 120;
+                if (window.scrollY >= sectionTop) {
+                    current = sec.getAttribute('id');
+                }
+            });
+            navItems.forEach(item => {
+                item.classList.remove('active');
+                if (item.getAttribute('href') === '#' + current) {
+                    item.classList.add('active');
+                }
+            });
+        });
+
+        // Contact form submission via Formspree (AJAX, no page reload)
+        const contactForm = document.getElementById('contactForm');
+        const contactStatus = document.getElementById('contactFormStatus');
+        const contactBtn = document.getElementById('contactSubmitBtn');
+
+        contactForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            contactBtn.disabled = true;
+            contactBtn.textContent = 'Sending...';
+            contactStatus.classList.remove('hidden', 'text-red-400', 'text-[#14b8b8]');
+
+            try {
+                const response = await fetch(contactForm.action, {
+                    method: 'POST',
+                    body: new FormData(contactForm),
+                    headers: { 'Accept': 'application/json' }
+                });
+
+                if (response.ok) {
+                    contactStatus.textContent = "Message sent! We'll get back to you soon.";
+                    contactStatus.classList.add('text-[#14b8b8]');
+                    contactForm.reset();
+                } else {
+                    contactStatus.textContent = 'Something went wrong. Please try again or email us directly.';
+                    contactStatus.classList.add('text-red-400');
+                }
+            } catch (err) {
+                contactStatus.textContent = 'Something went wrong. Please try again or email us directly.';
+                contactStatus.classList.add('text-red-400');
+            } finally {
+                contactBtn.disabled = false;
+                contactBtn.textContent = 'Send Message';
+            }
+        });
+    </script>
+</body>
+</html>
