@@ -124,6 +124,18 @@
             box-shadow: 0 20px 40px rgba(0,0,0,0.5), 0 0 30px rgba(0,128,128,0.12);
         }
 
+        /* Platinum tier: metallic silver finish with a subtle glow */
+        .platinum-heading {
+            background: linear-gradient(180deg, #ffffff 0%, #e8edf2 28%, #aeb8c2 52%, #f8fafc 72%, #c5ced6 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 10px rgba(226, 232, 240, 0.22),
+                         0 0 22px rgba(203, 213, 225, 0.16);
+            filter: drop-shadow(0 0 5px rgba(226, 232, 240, 0.28));
+        }
+
         .sponsor-card {
             background: rgba(20, 20, 20, 0.75);
             border: 1px solid rgba(255,255,255,0.06);
@@ -510,7 +522,7 @@
             <div class="mb-14" data-aos="fade-up">
                 <div class="flex items-center justify-center gap-4 mb-8">
                     <span class="h-px w-16 bg-gradient-to-r from-transparent to-[#d9d9d9]"></span>
-                    <h3 class="font-heading text-2xl md:text-3xl font-black italic uppercase tracking-widest text-[#e5e7eb]">Platinum Sponsors</h3>
+                    <h3 class="font-heading text-2xl md:text-3xl font-black italic uppercase tracking-widest platinum-heading">Platinum Sponsors</h3>
                     <span class="h-px w-16 bg-gradient-to-l from-transparent to-[#d9d9d9]"></span>
                 </div>
                 <div class="flex flex-wrap justify-center gap-8">
